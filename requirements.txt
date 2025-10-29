@@ -1,0 +1,10 @@
+numpy
+matplotlib
+requests
+biopython
+py3Dmol
+pillow
+pandas
+openpyxl
+seaborn
+scipy
