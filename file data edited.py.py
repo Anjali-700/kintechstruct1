@@ -1197,26 +1197,41 @@ protein engineering, and mutational effects on enzyme function.
             # Find the corresponding row in dataframe
             ec_number = values[0]
             organism = values[1]
-            substrate = values[2].replace('...', '') if '...' in values[2] else values[2]
+            substrate_fragment = values[2].replace('...', '') if '...' in values[2] else values[2]
             mutation = values[3]
             
-            # Create a mask to find the matching row
-            mask = (
-                (self.df['ec_number'] == ec_number) & 
-                (self.df['organism'] == organism) &
-                (self.df['substrate_kinetics'].str.contains(substrate, na=False))
-            )
+            # --- FIX: More robust mask ---
+            # Start with basic mask
+            mask = (self.df['ec_number'] == ec_number) & (self.df['organism'] == organism)
             
-            if mutation != 'N/A':
+            # Handle substrate
+            if substrate_fragment == 'N/A':
+                # If tree shows N/A, match rows where substrate is null/NaN
+                mask = mask & (self.df['substrate_kinetics'].isna())
+            else:
+                # Otherwise, use 'contains' for the fragment
+                mask = mask & (self.df['substrate_kinetics'].str.contains(substrate_fragment, na=False))
+            
+            # Handle mutation
+            if mutation == 'N/A':
+                # If tree shows N/A, match rows where mutation is null/NaN
+                mask = mask & (self.df['clean_mut_wt'].isna())
+            else:
+                # Otherwise, exact match
                 mask = mask & (self.df['clean_mut_wt'] == mutation)
+            # --- END FIX ---
             
             if mask.any():
-                row = self.df[mask].iloc[0]
+                row = self.df[mask].iloc[0] # Get the first match
                 self.current_enzyme_data = row
                 self.display_detailed_enzyme_info(row)
-                self.status_var.set(f"Displaying: {ec_number} | {organism} | {substrate[:30]}...")
+                self.status_var.set(f"Displaying: {ec_number} | {organism} | {substrate_fragment[:30]}...")
+            else:
+                # --- ADDED: Handle no match ---
+                self.status_var.set(f"Could not find details for: {ec_number} | {mutation}")
                 
         except Exception as e:
+            print(f"Error in display_selected_enzyme: {e}") # For debugging
             messagebox.showerror("Display Error", f"Failed to display enzyme details: {str(e)}")
 
     def setup_visualization_tab(self):
@@ -1923,6 +1938,13 @@ protein engineering, and mutational effects on enzyme function.
 
     def display_detailed_enzyme_info(self, row):
         """Display detailed enzyme information across multiple sections"""
+        
+        # --- FIX START ---
+        # Set widgets to NORMAL state so they can be cleared
+        for widget in [self.basic_info_text, self.wt_info_text, self.mutant_info_text, self.additional_info_text]:
+            widget.config(state=tk.NORMAL)
+        # --- FIX END ---
+        
         # Clear previous content
         self.basic_info_text.delete(1.0, tk.END)
         self.wt_info_text.delete(1.0, tk.END)
