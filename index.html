@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download | Bioinformatics Tools Suite</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <style>
+        /* ======== 0. SETUP AND VARIABLES ======== */
+        :root {
+            /* Colors - Updated to molecular biology theme */
+            --dark-bg: #0B1A2F; /* Dark blue background */
+            --dark-bg-secondary: #12263D;
+            --light-bg: #F0F7FF; /* Light blue background */
+            --light-bg-secondary: #FFFFFF;
+            --primary-glow: #2E8B57; /* Sea Green - molecular biology theme */
+            --secondary-glow: #4682B4; /* Steel Blue */
+            --text-light: #E0F0FF;
+            --text-dark: #1F3A5F;
+            --text-gray: #7A8CA5;
+            --border-color: rgba(255, 255, 255, 0.1);
+
+            /* Fonts */
+            --font-family: 'Poppins', sans-serif;
+
+            /* Sizing */
+            --header-height: 70px;
+            --border-radius: 12px;
+        }
+
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: color 0.3s ease;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        h1, h2, h3, h4 {
+            line-height: 1.3;
+            font-weight: 600;
+        }
+
+        h1 { font-size: 3.5rem; }
+        h2 { font-size: 2.5rem; }
+        h3 { font-size: 1.5rem; }
+
+        /* Utility Class */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        section {
+            padding: 6rem 0;
+        }
+
+        /* Light / Dark Section Theming */
+        .dark-section {
+            background: var(--dark-bg);
+            color: var(--text-light);
+        }
+        .light-section {
+            background: var(--light-bg);
+            color: var(--text-dark);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        /* ======== 1. HEADER / NAVIGATION ======== */
+        #header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            height: var(--header-height);
+            background: transparent;
+            transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
+        }
+
+        #header.scrolled {
+            background: rgba(11, 26, 47, 0.8); /* Semi-transparent dark */
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        #header nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+        }
+
+        .logo {
+            display: flex; 
+            align-items: center; 
+            text-decoration: none; 
+            color: #44ff00; 
+            font-size: 1.5rem; 
+            font-weight: bold; 
+        }
+
+        .logo-img {
+            height: 40px; 
+            width: auto; 
+            margin-right: 10px; /* Space between logo and text */
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+        
+        .nav-links {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        
+        .nav-links li {
+            margin-left: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-light); 
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-glow); 
+        }
+
+        .nav-toggle {
+            display: none; /* Hidden on desktop */
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            font-size: 2.5rem;
+            cursor: pointer;
+            z-index: 1100;
+        }
+
+        #hero {
+            height: 100vh;
+            min-height: 700px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            padding-top: var(--header-height);
+            /* ... other properties ... */
+            background-image: linear-gradient(rgba(11, 26, 47, 0.8), rgba(11, 26, 47, 0.9)), url('bioinformatics_background.jpg'); /* <-- Path to your new image */
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero-background-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(46, 139, 87, 0.15) 0%, rgba(46, 139, 87, 0) 60%);
+            transform: translate(-50%, -50%);
+            animation: pulse 5s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.7; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.7; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+        }
+
+        #hero h1 {
+            color: #fff;
+            margin-bottom: 1.5rem;
+        }
+        #hero p {
+            font-size: 1.2rem;
+            color: var(--text-gray);
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.8rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        /* Main download button style */
+        .btn-download {
+            background: var(--primary-glow);
+            color: var(--light-bg-secondary);
+            box-shadow: 0 0 15px rgba(46, 139, 87, 0.3);
+        }
+        .btn-download:hover {
+            background: #267348;
+            box-shadow: 0 0 25px rgba(46, 139, 87, 0.5);
+            transform: translateY(-3px);
+        }
+
+        /* Outline button style (for light sections) */
+        .btn-outline {
+            background: transparent;
+            border-color: var(--primary-glow);
+            color: var(--primary-glow);
+        }
+        .btn-outline:hover {
+            background: var(--primary-glow);
+            color: var(--light-bg-secondary);
+            transform: translateY(-3px);
+        }
+
+        /* ======== 3. ABOUT SECTION (Light) ======== */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 4rem;
+        }
+        .about-list {
+            margin-top: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .about-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+        }
+        .about-list i {
+            font-size: 1.5rem;
+            color: var(--primary-glow);
+        }
+        .about-image img {
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ======== 4. FEATURES SECTION (Dark) ======== */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--dark-bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 2.5rem 2rem;
+            border-radius: var(--border-radius);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-glow);
+            box-shadow: 0 10px 30px rgba(46, 139, 87, 0.1);
+        }
+        .card-icon {
+            font-size: 3rem;
+            color: var(--primary-glow);
+            margin-bottom: 1.5rem;
+        }
+        .feature-card h3 {
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+        .feature-card p {
+            color: var(--text-gray);
+        }
+
+        /* ======== 5. COMPATIBILITY SECTION (Light) ======== */
+        .compatibility-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .os-card {
+            background: var(--light-bg-secondary);
+            border: 1px solid #E5E7EB;
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .os-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+        }
+        .os-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+        }
+        .os-card h3 {
+            margin-bottom: 1.5rem;
+        }
+        .requirements-list {
+            text-align: left;
+            margin-bottom: 2rem;
+            color: #4B5563;
+        }
+        .requirements-list li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* ======== 6. SCREENSHOTS / DEMO (Dark) ======== */
+        #demo {
+            padding-bottom: 0;
+            overflow: hidden;
+        }
+
+        .screenshot-slider-wrapper {
+            width: 100%;
+            overflow: hidden;
+            margin-top: 4rem;
+            /* Creates a faded edge effect */
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        }
+        .screenshot-slider {
+            display: flex;
+            width: fit-content;
+            animation: scroll 40s linear infinite;
+        }
+        .screenshot-slider img {
+            height: 500px;
+            width: auto;
+            margin: 0 1rem;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+        }
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ======== 7. TESTIMONIALS (Light) ======== */
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2rem;
+        }
+        .testimonial-card {
+            background: var(--light-bg-secondary);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            border-left: 5px solid var(--primary-glow);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        .testimonial-card p {
+            font-style: italic;
+            color: #374151;
+            margin-bottom: 1.5rem;
+        }
+        .author {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* ======== 8. FOOTER (Dark) ======== */
+        #footer {
+            background: var(--dark-bg);
+            padding: 4rem 0;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .footer-links a {
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+        .footer-links a:hover {
+            color: var(--text-light);
+        }
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+        }
+        .social-icons a:hover {
+            color: var(--primary-glow);
+            transform: scale(1.1);
+        }
+        .copyright {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        /* ======== 9. ANIMATIONS ON SCROLL ======== */
+        /* Initial state (hidden) */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        /* Final state (visible) */
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Staggered animation for children */
+        .animate-on-scroll.is-visible .animate-on-scroll {
+            transition-delay: 0.2s;
+        }
+
+        /* ======== 10. RESPONSIVE DESIGN ======== */
+        @media (max-width: 992px) {
+            h1 { font-size: 3rem; }
+            h2 { font-size: 2.2rem; }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .about-list {
+                text-align: left;
+            }
+            .about-image {
+                margin-top: 2rem;
+            }
+            .compatibility-grid,
+            .testimonial-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            
+            .nav-toggle {
+                display: block; /* Show the hamburger button */
+            }
+
+            .nav-links {
+                position: fixed;
+                top: var(--header-height);
+                left: -100%; /* Start off-screen */
+                width: 100%;
+                height: calc(100vh - var(--header-height));
+                background: var(--dark-bg);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 2rem;
+                transition: left 0.3s ease-in-out;
+                z-index: 1050;
+            }
+            
+            .nav-links.active {
+                left: 0; /* Slide in when active */
+            }
+
+            .nav-links li {
+                margin-left: 0;
+            }
+            .nav-links a {
+                font-size: 1.5rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            .btn {
+                width: 80%;
+                justify-content: center;
+            }
+            
+            .compatibility-grid,
+            .testimonial-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header id="header">
+    <nav class="container">
+        <a href="#" class="logo">
+            <img src="logo.png" alt="Bio-Tools Suite Logo" class="logo-img">
+            Bio-Tools Suite
+            <span class="sr-only">(Bioinformatics Tools Suite)</span>
+        </a>
+        <ul class="nav-links" id="nav-links"> <li><a href="#about">About</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#compatibility">Compatibility</a></li>
+            <li><a href="#demo">Demo</a></li>
+        </ul>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation menu">
+            <i class='bx bx-menu'></i>
+        </button>
+    </nav>
+    </header>
+
+    <main>
+        <section id="hero">
+            <div class="hero-background-glow"></div>
+            <div class="container hero-content">
+                <h1 class="animate-on-scroll">Bioinformatics Tools Suite</h1>
+                <p class="animate-on-scroll">
+                    An integrated desktop application for Advanced Protein Sequence Analysis and Enzyme Kinetics Database Management.
+                </p>
+                <div class="hero-buttons animate-on-scroll">
+                    <a href="app.exe" class="btn btn-download">
+                        <i class='bx bxl-windows'></i> Download for Windows
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="light-section">
+            <div class="container about-grid">
+                <div class="about-text animate-on-scroll">
+                    <h2>Dual-Mode Analysis Platform</h2>
+                    <p>
+                        Our suite combines two powerful, specialized applications into one package,
+                        engineered for researchers, students, and professionals in proteomics and enzymology.
+                    </p>
+                    <ul class="about-list">
+                        <li><i class='bx bxs-atom'></i> Advanced Protein Sequence Analysis</li>
+                        <li><i class='bx bxs-dashboard'></i> Enzyme Kinetics Database Analyzer</li>
+                        <li><i class='bx bx-line-chart'></i> Integrated Statistical &amp; Plotting Tools</li>
+                        <li><i class='bx bx-cube-alt'></i> 3D Structure Fetching &amp; Visualization</li>
+                    </ul>
+                </div>
+                <div class="about-image animate-on-scroll">
+                    <img src="Visualization.png" alt="Protein 3D Structure Visualization">
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="dark-section">
+            <div class="container">
+                <h2 class="section-title animate-on-scroll">Powerful Research Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card animate-on-scroll">
+                        <div class="card-icon"><i class='bx bx-atom'></i></div>
+                        <h3>Protein Sequence Analysis</h3>
+                        <p>Calculate physicochemical properties: Molecular Weight, pI, Charge, Instability Index, Half-life, and more.</p>
+                    </div>
+                    <div class="feature-card animate-on-scroll">
+                        <div class="card-icon"><i class='bx bx-cube-alt'></i></div>
+                        <h3>3D Structure Analysis</h3>
+                        <p>Fetch PDB structures directly from the RCSB database. View and interact with 3D models in your browser via py3Dmol.</p>
+                    </div>
+                    <div class="feature-card animate-on-scroll">
+                        <div class="card-icon"><i class='bx bx-scatter-plot'></i></div>
+                        <h3>Protein Plotting</h3>
+                        <p>Generate key plots including Ramachandran plots, Hydrophobicity profiles, and Amino Acid Composition charts.</p>
+                    </div>
+                    <div class="feature-card animate-on-scroll">
+                        <div class="card-icon"><i class='bx bx-data'></i></div>
+                        <h3>Kinetics Database</h3>
+                        <p>Load, search, and filter large enzyme kinetics datasets (kcat, Km, ΔΔG). Search by EC number, organism, or substrate.</p>
+                    </div>
+                    <div class="feature-card animate-on-scroll">
+                        <div class="card-icon"><i class='bx bx-bar-chart-alt-2'></i></div>
+                        <h3>Kinetics Visualization</h3>
+                        <p>Create 10+ publication-ready plots: kcat/Km comparisons, ΔΔG distributions, correlation matrices, and more.</p>
+                    </div>
+                    <div class="feature-card animate-on-scroll">
+                        <div class="card-icon"><i class='bx bx-math'></i></div>
+                        <h3>Statistical Analysis</h3>
+                        <p>Perform descriptive statistics, correlation analysis, regression, and normality tests on your enzyme kinetics data.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="compatibility" class="light-section">
+            <div class="container">
+                <h2 class="section-title animate-on-scroll">System Requirements</h2>
+                <div class="compatibility-grid">
+                    <div class="os-card animate-on-scroll">
+                        <i class='bx bxl-windows os-icon'></i>
+                        <h3>Windows</h3>
+                        <ul class="requirements-list">
+                            <li><strong>Minimum:</strong> Windows 10 (64-bit)</li>
+                            <li><strong>Recommended:</strong> Windows 11</li>
+                            <li>8GB RAM, 2GB Storage</li>
+                            <li>(Python and libraries included in executable)</li>
+                        </ul>
+                        <a href="app.exe" class="btn btn-outline">Download</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="demo" class="dark-section">
+            <div class="container">
+                <h2 class="section-title animate-on-scroll">Application Screenshots</h2>
+            </div>
+            <div class="screenshot-slider-wrapper">
+                <div class="screenshot-slider">
+                    <img src="https://via.placeholder.com/800x500/12263D/E0F0FF?text=App+Selector+Screen" alt="Application Selector Screen">
+                    <img src="https://via.placeholder.com/800x500/F0F7FF/1F3A5F?text=Protein+Analysis+Report" alt="Protein Analysis Report">
+                    <img src="https://via.placeholder.com/800x500/F0F7FF/1F3A5F?text=Ramachandran+Plot" alt="Ramachandran Plot">
+                    <img src="https://via.placeholder.com/800x500/12263D/E0F0FF?text=Enzyme+Kinetics+Dashboard" alt="Enzyme Kinetics Dashboard">
+                    <img src="https://via.placeholder.com/800x500/F0F7FF/1F3A5F?text=kcat+vs+Km+Plot" alt="kcat vs Km Plot">
+                    <img src="https://via.placeholder.com/800x500/F0F7FF/1F3A5F?text=Statistical+Analysis+Tab" alt="Statistical Analysis Tab">
+                    <img src="https://via.placeholder.com/800x500/12263D/E0F0FF?text=3D+Structure+Viewer" alt="3D Structure Viewer">
+                </div>
+            </div>
+        </section>
+        
+        <section id="testimonials" class="light-section">
+            <div class="container">
+                <h2 class="section-title animate-on-scroll">Trusted by Researchers</h2>
+                <div class="testimonial-grid">
+                    <div class="testimonial-card animate-on-scroll">
+                        <p>"............."</p>
+                        <span class="author">- Dr. ....</span>
+                    </div>
+                    <div class="testimonial-card animate-on-scroll">
+                        <p>"............."</p>
+                        <span class="author">- Dr. .............</span>
+                    </div>
+                    <div class="testimonial-card animate-on-scroll">
+                        <p>"............."</p>
+                        <span class="author">- Dr. .............</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="footer">
+        <div class="container footer-content">
+            <div class="footer-links">
+                <a href="#">Documentation</a>
+                <a href="#">Support</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="social-icons">
+                <a href="#"><i class='bx bxl-twitter'></i></a>
+                <a href="#"><i class='bx bxl-github'></i></a>
+                <a href="#"><i class='bx bxl-researchgate'></i></a>
+            </div>
+            <p class="copyright">
+                &copy; 2025 Bioinformatics Tools Suite. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // 1. Sticky Header
+            const header = document.getElementById('header');
+            if (header) {
+                window.addEventListener('scroll', () => {
+                    if (window.scrollY > 50) {
+                        header.classList.add('scrolled');
+                    } else {
+                        header.classList.remove('scrolled');
+                    }
+                });
+            }
+
+            // 2. Animate Elements on Scroll
+            const scrollElements = document.querySelectorAll('.animate-on-scroll');
+
+            if ("IntersectionObserver" in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                        }
+                    });
+                }, {
+                    threshold: 0.1
+                });
+
+                scrollElements.forEach(el => {
+                    observer.observe(el);
+                });
+            } else {
+                // Fallback for very old browsers
+                scrollElements.forEach(el => {
+                    el.classList.add('is-visible');
+                });
+            }
+
+            // 3. Seamless Screenshot Slider
+            const slider = document.querySelector('.screenshot-slider');
+            if (slider) {
+                const slides = Array.from(slider.children);
+                slides.forEach(slide => {
+                    const clone = slide.cloneNode(true);
+                    slider.appendChild(clone);
+                });
+            }
+
+            // 4. Mobile Navigation Toggle
+            const navToggle = document.getElementById('nav-toggle');
+            const navLinks = document.getElementById('nav-links');
+
+            if (navToggle && navLinks) {
+                navToggle.addEventListener('click', () => {
+                    navLinks.classList.toggle('active');
+                    const icon = navToggle.querySelector('i');
+                    if (navLinks.classList.contains('active')) {
+                        icon.classList.remove('bx-menu');
+                        icon.classList.add('bx-x');
+                    } else {
+                        icon.classList.remove('bx-x');
+                        icon.classList.add('bx-menu');
+                    }
+                });
+            }
+
+        });
+    </script>
+</body>
+</html>
