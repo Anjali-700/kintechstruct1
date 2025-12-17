@@ -7,40 +7,105 @@
     <meta name="description" content="Professional bioinformatics software for protein analysis and enzyme kinetics research">
     <meta name="author" content="Bioinformatics Tools Suite">
     
-    <!-- Security and verification meta tags -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval'">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     
     <style>
         :root {
-            --primary: #2c3e50;
-            --secondary: #3498db;
+            --primary: #1a2a6c;
+            --secondary: #2a48f3; 
             --accent: #e74c3c;
             --light: #ecf0f1;
-            --dark: #2c3e50;
-            --success: #2ecc71;
-            --warning: #f39c12;
+            --dark: #0f172a;
+            --success: #00b894;
+            --warning: #fdbb2d;
+            --glass-bg: rgba(255, 255, 255, 0.92);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+        
+        html {
+            scroll-behavior: smooth;
         }
         
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
-            background-color: #f8f9fa;
+            background-color: #0f172a;
             color: #333;
             line-height: 1.6;
+            font-family: 'Open Sans', sans-serif;
+            overflow-x: hidden;
+            
+            /* --- BACKGROUND IMAGE SETTINGS --- */
+            
+            /* 1. This looks for a file named "background.jpg" in your folder.
+               2. If not found, it tries the web link.
+               3. The 'rgba' numbers control darkness. 0.4 = 40% dark (lighter than before).
+            */
+            background-image: 
+                linear-gradient(rgba(10, 20, 40, 0.4), rgba(10, 20, 40, 0.4)), 
+                url('background.jpg'),
+                url('https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=2048&auto=format&fit=crop');
+                
+            background-attachment: fixed;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
         }
         
+        .molecule-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .molecule {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        .molecule::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 20px;
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+
         header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: transparent;
+            background-image: linear-gradient(to right, rgba(26, 42, 108, 0.9), rgba(178, 31, 31, 0.8));
+            backdrop-filter: blur(5px);
             color: white;
-            padding: 2rem 0;
+            padding: 3rem 0;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .container {
@@ -48,39 +113,72 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem 0;
+            position: relative;
+            z-index: 1;
         }
         
+        h1, h2, h3, h4 {
+            font-family: 'Poppins', sans-serif;
+        }
+
         h1 {
-            font-size: 2.5rem;
+            font-size: 3rem;
             margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-weight: 700;
         }
         
         h2 {
-            font-size: 2rem;
+            font-size: 2.2rem;
             margin: 2rem 0 1rem;
             color: var(--primary);
+            position: relative;
+            display: inline-block;
         }
         
+        h2::after {
+            content: '';
+            display: block;
+            width: 50%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary), transparent);
+            margin-top: 5px;
+            border-radius: 2px;
+        }
+
         h3 {
             font-size: 1.5rem;
             margin: 1.5rem 0 1rem;
             color: var(--secondary);
+            font-weight: 600;
         }
         
         .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
+            font-size: 1.3rem;
+            opacity: 0.95;
             max-width: 800px;
             margin: 0 auto;
+            font-weight: 300;
         }
         
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+        }
+
         .hero {
             text-align: center;
-            padding: 3rem 0;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 4rem 2rem;
             margin-bottom: 3rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            animation: fadeInDown 1s ease-out;
         }
         
         .features {
@@ -91,68 +189,89 @@
         }
         
         .feature-card {
-            background: white;
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: var(--glass-bg);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            transition: all 0.4s ease;
+            border-top: 4px solid transparent;
+            opacity: 0;
         }
         
         .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-10px);
+            border-top: 4px solid var(--secondary);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
         }
         
         .feature-icon {
             font-size: 3rem;
             margin-bottom: 1rem;
-            color: var(--secondary);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         .tools-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            grid-template-columns: 1fr;
             gap: 2rem;
             margin: 3rem 0;
         }
         
         .tool-card {
-            background: white;
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .tool-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.5);
         }
         
         .tool-header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f);
             color: white;
-            padding: 1.5rem;
+            padding: 2rem;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tool-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -10%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
         }
         
         .tool-icon {
-            font-size: 2.5rem;
+            font-size: 3.5rem;
             margin-bottom: 1rem;
+            text-shadow: 0 4px 6px rgba(0,0,0,0.2);
         }
         
         .tool-body {
-            padding: 2rem;
+            padding: 3rem;
         }
         
         .tool-features {
             list-style-type: none;
             margin: 1.5rem 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
         }
         
         .tool-features li {
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #eee;
+            padding: 0.8rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid var(--success);
+            font-size: 0.95rem;
         }
         
         .tool-features li:before {
@@ -164,191 +283,226 @@
         
         .btn {
             display: inline-block;
-            padding: 12px 24px;
-            background-color: var(--secondary);
+            padding: 16px 32px;
+            background-image: linear-gradient(135deg, var(--secondary), #1a2a6c);
             color: white;
             text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
             border: none;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(42, 72, 243, 0.4);
+            letter-spacing: 0.5px;
+            font-family: 'Poppins', sans-serif;
         }
         
         .btn:hover {
-            background-color: #2980b9;
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(42, 72, 243, 0.5);
         }
         
         .btn-download {
-            background-color: var(--success);
+            background-image: linear-gradient(135deg, #00b894, #00cec9);
             width: 100%;
             text-align: center;
-            margin-top: 1rem;
-            padding: 15px;
-            font-size: 1.1rem;
+            margin-top: 1.5rem;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.4);
         }
         
         .btn-download:hover {
-            background-color: #27ae60;
+            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.5);
         }
 
-        /* Security badge styles */
         .security-badge {
-            display: inline-block;
-            background: #f8f9fa;
-            border: 2px solid #e9ecef;
-            border-radius: 5px;
-            padding: 1rem;
-            margin: 1rem 0;
-            text-align: center;
-        }
-
-        .security-badge .icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 1.5rem 3rem;
+            margin: 2rem 0 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
 
         .download-instructions {
-            background: #e8f5e8;
-            border: 1px solid #2ecc71;
-            border-radius: 5px;
-            padding: 1rem;
-            margin: 1rem 0;
+            background: rgba(46, 204, 113, 0.1);
+            border: 1px dashed #2ecc71;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
         }
 
-        .download-instructions h4 {
-            color: #27ae60;
-            margin-bottom: 0.5rem;
-        }
-        
         .system-requirements {
-            background-color: white;
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            margin: 3rem 0;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            box-shadow: var(--shadow);
+            margin: 4rem 0;
         }
         
         .requirements-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
         }
         
         .requirement-item {
-            padding: 1rem;
-            background-color: #f8f9fa;
-            border-radius: 5px;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.7);
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .requirement-item:hover {
+            transform: scale(1.05);
+            background: white;
         }
         
         .requirement-item h4 {
             margin-bottom: 0.5rem;
             color: var(--primary);
+            font-size: 1.1rem;
         }
         
         .testimonials {
-            background-color: white;
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            margin: 3rem 0;
+            background: var(--glass-bg);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            margin: 4rem 0;
         }
         
         .testimonial-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
-            margin-top: 1.5rem;
+            margin-top: 2rem;
         }
         
         .testimonial {
-            padding: 1.5rem;
-            background-color: #f8f9fa;
-            border-radius: 5px;
-            border-left: 4px solid var(--secondary);
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            border-left: 5px solid var(--secondary);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            position: relative;
         }
         
-        .testimonial-text {
-            font-style: italic;
-            margin-bottom: 1rem;
-        }
-        
-        .testimonial-author {
-            font-weight: bold;
-            color: var(--primary);
+        .testimonial::before {
+            content: '"';
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 4rem;
+            color: #eee;
+            font-family: serif;
         }
         
         .faq {
-            background-color: white;
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            margin: 3rem 0;
+            background: var(--glass-bg);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            margin: 4rem 0;
         }
         
         .faq-item {
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 1.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
         }
         
         .faq-question {
-            font-weight: bold;
+            font-weight: 600;
             color: var(--primary);
-            margin-bottom: 0.5rem;
+            padding: 1.5rem;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: background 0.3s;
+        }
+        
+        .faq-question:hover {
+            background: #f8f9fa;
         }
         
         .faq-answer {
-            color: #666;
+            color: #555;
+            padding: 0 1.5rem 1.5rem;
         }
         
         footer {
-            background-color: var(--primary);
+            background: linear-gradient(to right, #0f172a, #1a2a6c);
             color: white;
-            text-align: center;
-            padding: 2rem 0;
-            margin-top: 3rem;
-        }
-        
-        .footer-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
+            padding: 4rem 0 2rem;
+            margin-top: 5rem;
+            position: relative;
+            z-index: 2;
         }
         
         .social-links {
             display: flex;
-            gap: 1rem;
+            gap: 1.5rem;
+            margin-top: 1rem;
         }
         
         .social-links a {
             color: white;
             font-size: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.3s;
         }
         
+        .social-links a:hover {
+            background: var(--secondary);
+            transform: rotate(360deg);
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: none;
+        }
+        
+        .visible {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
         @media (max-width: 768px) {
-            .tools-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            h2 {
-                font-size: 1.7rem;
-            }
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.7rem; }
+            .hero { padding: 2rem 1rem; }
+            .container { width: 95%; }
         }
     </style>
 </head>
 <body>
+    <div class="molecule-bg"></div>
+
     <header>
         <div class="container">
             <h1>Bioinformatics Tools Suite</h1>
@@ -361,7 +515,6 @@
             <h2>Download Our Professional Bioinformatics Software</h2>
             <p>Comprehensive desktop applications for protein researchers, biochemists, and bioinformaticians</p>
             
-            <!-- Security Badge -->
             <div class="security-badge">
                 <div class="icon">🛡️</div>
                 <h4>Secure Download</h4>
@@ -370,48 +523,53 @@
         </section>
         
         <section>
-            <h2>Featured Tools</h2>
+            <h2 style="color: white; text-shadow: 1px 1px 2px black;">Featured Tools</h2>
             <div class="tools-grid">
-                <div class="tool-card" style="grid-column: 1 / -1; max-width: 900px; margin: 0 auto;">
+                <div class="tool-card animate-on-scroll" style="grid-column: 1 / -1; max-width: 900px; margin: 0 auto;">
                     <div class="tool-header">
                         <div class="tool-icon">🧬⚡</div>
                         <h3>Bioinformatics Tools Suite</h3>
+                        <p style="color: rgba(255,255,255,0.8); margin-top: 0.5rem;">The Ultimate Research Companion</p>
                     </div>
                     <div class="tool-body">
-                        <p>Comprehensive desktop application suite featuring Protein Sequence Analyzer and Enzyme Kinetics Analyzer for complete protein analysis and enzyme kinetics research.</p>
+                        <p style="font-size: 1.1rem; text-align: center; margin-bottom: 2rem;">Comprehensive desktop application suite featuring Protein Sequence Analyzer and Enzyme Kinetics Analyzer for complete protein analysis and enzyme kinetics research.</p>
                         
-                        <!-- Download Instructions -->
                         <div class="download-instructions">
                             <h4>📋 Download Instructions</h4>
                             <p><strong>If your browser blocks the download:</strong></p>
-                            <ol>
+                            <ol style="margin-left: 1.5rem; margin-top: 0.5rem;">
                                 <li>Click the download button below</li>
                                 <li>If a warning appears, click "Keep" or "Download anyway"</li>
                                 <li>The file is safe and verified from our GitHub repository</li>
                             </ol>
                         </div>
                         
-                        <h4 style="color: var(--primary); margin-top: 1.5rem; margin-bottom: 1rem;">🧬 Protein Sequence Analyzer</h4>
-                        <ul class="tool-features">
-                            <li>Sequence analysis and validation</li>
-                            <li>Molecular weight and pI calculation</li>
-                            <li>Secondary structure prediction</li>
-                            <li>3D structure visualization</li>
-                            <li>Ramachandran plot generation</li>
-                            <li>Export to Excel and reports</li>
-                        </ul>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem;">
+                            <div>
+                                <h4 style="color: var(--primary); margin-bottom: 1rem; border-bottom: 2px solid var(--secondary); padding-bottom: 5px;">🧬 Protein Sequence Analyzer</h4>
+                                <ul class="tool-features" style="display: block;">
+                                    <li>Sequence analysis and validation</li>
+                                    <li>Molecular weight and pI calculation</li>
+                                    <li>Secondary structure prediction</li>
+                                    <li>3D structure visualization</li>
+                                    <li>Ramachandran plot generation</li>
+                                    <li>Export to Excel and reports</li>
+                                </ul>
+                            </div>
+                            
+                            <div>
+                                <h4 style="color: var(--primary); margin-bottom: 1rem; border-bottom: 2px solid var(--accent); padding-bottom: 5px;">⚡ Enzyme Kinetics Analyzer</h4>
+                                <ul class="tool-features" style="display: block;">
+                                    <li>Database exploration and filtering</li>
+                                    <li>Mutation impact assessment</li>
+                                    <li>Statistical analysis tools</li>
+                                    <li>Multiple visualization types</li>
+                                    <li>Data export capabilities</li>
+                                    <li>Add new experimental data</li>
+                                </ul>
+                            </div>
+                        </div>
                         
-                        <h4 style="color: var(--primary); margin-top: 1.5rem; margin-bottom: 1rem;">⚡ Enzyme Kinetics Analyzer</h4>
-                        <ul class="tool-features">
-                            <li>Database exploration and filtering</li>
-                            <li>Mutation impact assessment</li>
-                            <li>Statistical analysis tools</li>
-                            <li>Multiple visualization types</li>
-                            <li>Data export capabilities</li>
-                            <li>Add new experimental data</li>
-                        </ul>
-                        
-                        <!-- Updated Download Button with enhanced attributes -->
                         <a href="https://github.com/Anjali-700/kintechstruct1/releases/download/V1/main.data.exe"
                            class="btn btn-download"
                            download="Bioinformatics_Tools_Suite.exe"
@@ -419,7 +577,6 @@
                            Download Bioinformatics Tools Suite (Windows .exe)
                         </a>
         
-                     
                         <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem; color: #666;">
                             File size: ~15 MB | Version: 1.0 | For Windows 10/11
                         </p>
@@ -428,30 +585,36 @@
             </div>
         </section>
         
-        <section class="system-requirements">
+        <section class="system-requirements animate-on-scroll">
             <h2>System Requirements</h2>
             <div class="requirements-grid">
                 <div class="requirement-item">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">💻</div>
                     <h4>Operating System</h4>
                     <p>Windows 10/11, macOS 10.14+, or Linux (Ubuntu 18.04+)</p>
                 </div>
                 <div class="requirement-item">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">⚙️</div>
                     <h4>Processor</h4>
                     <p>2.0 GHz dual-core processor or better</p>
                 </div>
                 <div class="requirement-item">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🧠</div>
                     <h4>Memory</h4>
                     <p>4 GB RAM minimum, 8 GB recommended</p>
                 </div>
                 <div class="requirement-item">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">💾</div>
                     <h4>Storage</h4>
                     <p>500 MB available disk space</p>
                 </div>
                 <div class="requirement-item">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🖥️</div>
                     <h4>Display</h4>
                     <p>1280x768 screen resolution or higher</p>
                 </div>
                 <div class="requirement-item">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🐍</div>
                     <h4>Python</h4>
                     <p>Python 3.8+ (included in installer)</p>
                 </div>
@@ -459,30 +622,30 @@
         </section>
         
         <section class="features">
-            <h2>Key Features</h2>
-            <div class="feature-card">
+            <h2 style="color: white; width: 100%; text-shadow: 1px 1px 2px black;">Key Features</h2>
+            <div class="feature-card animate-on-scroll">
                 <div class="feature-icon">🔍</div>
                 <h3>Comprehensive Analysis</h3>
                 <p>Perform detailed protein sequence analysis including molecular weight, isoelectric point, hydrophobicity, and more.</p>
             </div>
-            <div class="feature-card">
+            <div class="feature-card animate-on-scroll" style="animation-delay: 0.2s">
                 <div class="feature-icon">📊</div>
                 <h3>Advanced Visualization</h3>
                 <p>Generate multiple plot types including Ramachandran plots, hydrophobicity profiles, and 3D structure views.</p>
             </div>
-            <div class="feature-card">
+            <div class="feature-card animate-on-scroll" style="animation-delay: 0.4s">
                 <div class="feature-icon">📈</div>
                 <h3>Statistical Tools</h3>
                 <p>Built-in statistical analysis including correlation matrices, regression analysis, and distribution testing.</p>
             </div>
-            <div class="feature-card">
+            <div class="feature-card animate-on-scroll" style="animation-delay: 0.6s">
                 <div class="feature-icon">💾</div>
                 <h3>Data Management</h3>
                 <p>Import, export, and manage enzyme kinetics data with advanced filtering and search capabilities.</p>
             </div>
         </section>
         
-        <section class="testimonials">
+        <section class="testimonials animate-on-scroll">
             <h2>What Researchers Say</h2>
             <div class="testimonial-grid">
                 <div class="testimonial">
@@ -500,7 +663,7 @@
             </div>
         </section>
         
-        <section class="faq">
+        <section class="faq animate-on-scroll">
             <h2>Frequently Asked Questions</h2>
             <div class="faq-item">
                 <div class="faq-question">Is the software free to use? <span>+</span></div>
@@ -549,94 +712,88 @@
         </div>
     </footer>
 
-    <!-- Verification Modal -->
-    <div id="verificationModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
-        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 2rem; border-radius: 10px; max-width: 500px; width: 90%;">
-            <h3>Software Verification</h3>
+    <div id="verificationModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; backdrop-filter: blur(5px);">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 2rem; border-radius: 16px; max-width: 500px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+            <h3 style="margin-bottom: 1rem; color: var(--primary);">Software Verification</h3>
             <p>This software is open-source and available on GitHub:</p>
-            <p><strong>Repository:</strong> <a href="https://github.com/Anjali-700/bioinformation-tools" target="_blank">github.com/Anjali-700/bioinformation-tools</a></p>
-            <p><strong>SHA-256 Checksum:</strong> [Will be calculated after build]</p>
+            <p style="margin: 1rem 0;"><strong>Repository:</strong> <a href="https://github.com/Anjali-700/bioinformation-tools" target="_blank" style="color: var(--secondary);">github.com/Anjali-700/bioinformation-tools</a></p>
             <button onclick="document.getElementById('verificationModal').style.display='none'" class="btn" style="margin-top: 1rem;">Close</button>
         </div>
     </div>
 
     <script>
-        // Simple FAQ toggle functionality
+        function createParticles() {
+            const container = document.querySelector('.molecule-bg');
+            const particleCount = 20;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('molecule');
+                const size = Math.random() * 50 + 10;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.top = `${Math.random() * 100}vh`;
+                particle.style.animationDuration = `${Math.random() * 15 + 10}s`;
+                particle.style.animationDelay = `-${Math.random() * 10}s`;
+                container.appendChild(particle);
+            }
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.animate-on-scroll').forEach((el) => {
+            observer.observe(el);
+        });
+
+        window.addEventListener('load', createParticles);
+
         document.querySelectorAll('.faq-question').forEach(question => {
             question.addEventListener('click', () => {
                 const answer = question.nextElementSibling;
                 const isVisible = answer.style.display === 'block';
-                
-                // Hide all answers
-                document.querySelectorAll('.faq-answer').forEach(ans => {
-                    ans.style.display = 'none';
-                });
-                
-                // Reset all icons
-                document.querySelectorAll('.faq-question span').forEach(span => {
-                    span.textContent = '+';
-                });
-                
-                // Show/hide current answer
+                document.querySelectorAll('.faq-answer').forEach(ans => ans.style.display = 'none');
+                document.querySelectorAll('.faq-question span').forEach(span => span.textContent = '+');
                 if (!isVisible) {
                     answer.style.display = 'block';
                     question.querySelector('span').textContent = '−';
+                    answer.parentElement.style.boxShadow = "0 5px 15px rgba(0,0,0,0.05)";
+                } else {
+                    answer.parentElement.style.boxShadow = "none";
                 }
             });
         });
         
-        // Initially hide all FAQ answers
-        document.querySelectorAll('.faq-answer').forEach(answer => {
-            answer.style.display = 'none';
-        });
+        document.querySelectorAll('.faq-answer').forEach(answer => answer.style.display = 'none');
 
-        // Download tracking
         function trackDownload() {
-            // You can add analytics here
             console.log('Download initiated');
-            
-            // Show a confirmation message
             setTimeout(() => {
                 alert('Download started! If it gets blocked, check your browser\'s download bar and click "Keep" or "Download anyway".');
             }, 1000);
         }
 
-        // Show verification info
         function showVerificationInfo() {
             document.getElementById('verificationModal').style.display = 'block';
         }
 
-        // Close modal when clicking outside
         document.getElementById('verificationModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 this.style.display = 'none';
             }
         });
 
-        // Enhanced download with fallback
         document.querySelector('.btn-download').addEventListener('click', function(e) {
-            // Add a small delay to ensure the download starts
             setTimeout(() => {
-                // Check if download likely succeeded
-                const downloadTime = new Date().getTime();
-                localStorage.setItem('lastDownloadAttempt', downloadTime);
+                localStorage.setItem('lastDownloadAttempt', new Date().getTime());
             }, 2000);
-        });
-
-        // Check for common download issues
-        window.addEventListener('load', function() {
-            const lastAttempt = localStorage.getItem('lastDownloadAttempt');
-            if (lastAttempt && (new Date().getTime() - lastAttempt < 10000)) {
-                console.log('Recent download attempt detected');
-            }
         });
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
